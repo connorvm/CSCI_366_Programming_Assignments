@@ -26,6 +26,12 @@
  * @return length of the file in bytes
  */
 int get_file_length(ifstream *file){
+
+    /*
+    std::ifstream f_in(*file);
+    char character; int count = 0;
+    while (fin >> character) ++count;
+    std::cout << count << " characters in Player 1 board\n";*/
 }
 
 
