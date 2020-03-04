@@ -22,6 +22,15 @@ Client::~Client() {
 
 
 void Client::initialize(unsigned int player, unsigned int board_size){
+    /**
+     * Performs the initialization functions that normally would be in a constructor, but needs to be a separate
+     * function for googletest so clients may be initialized in the SetUp() function.
+     * Creates player_#.action_board.json.
+     * @param player - the id of the player
+     * @param board_size - the square size of the action board
+     */
+
+    
 }
 
 
