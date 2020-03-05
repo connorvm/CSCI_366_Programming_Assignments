@@ -31,6 +31,8 @@ using namespace std;
  */
 int get_file_length(ifstream *file){
 
+    cout << file << " is the input file.\n";
+
     /*
     std::ifstream f_in(*file);
     char character; int count = 0;
@@ -45,6 +47,7 @@ void Server::initialize(unsigned int board_size,
     /*The method opens player setup boards containing ship positions and checks the size of boards compared to
      * board_size parameter.
      */
+
 
     //open setup_boards
     std::ifstream p1_in("player_1.setup_board.txt");
@@ -98,11 +101,11 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
     }
 
     //Check that shot coordinates are within bounds, if so, return 0
-    if (x > BOARD_SIZE || x < 0){
+    if (x > BOARD_SIZE){
         cout << "X coordinates is not within bounds" << endl;
         return 0;
     }
-    if (y > BOARD_SIZE || y < 0){
+    if (y > BOARD_SIZE){
         cout << "Y coordinates is not within bounds" << endl;
         return 0;
     }
@@ -112,10 +115,20 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
 
     //Determine if shot is a hit, if so, return 1
 
-    return 3;
 }
 
 
 int Server::process_shot(unsigned int player) {
+
+    /**
+    * Processes a shot issued by player
+    *
+    * Gets the shot from player, extracts coordinates, passes the information of evaluate_shot, and writes the result
+    * into player_#.result.json.
+    * @param player - player number
+    * @return returns SHOT_PROCESSED, or NO_SHOT_FILE if nothing to process
+    */
+
+
    return NO_SHOT_FILE;
 }
