@@ -48,17 +48,18 @@ void Server::initialize(unsigned int board_size,
      * board_size parameter.
      */
 
+    //int board1 = get_file_length(p1_setup_board;
 
     //open setup_boards
     std::ifstream p1_in("player_1.setup_board.txt");
     char character1; int count1 = 0;
     while (p1_in >> character1) ++count1;
-    std::cout << count1/10 << " characters in Player 1 board\n";
+    std::cout << count1/board_size << " characters in Player 1 board\n";
 
     std::ifstream p2_in("player_2.setup_board.txt");
     char character2; int count2 = 0;
     while (p2_in >> character2) ++count2;
-    std::cout << count2/10 << " characters in Player 2 board\n";
+    std::cout << count2/board_size << " characters in Player 2 board\n";
 
     std::cout << board_size << " characters in board size\n";
 
@@ -66,11 +67,11 @@ void Server::initialize(unsigned int board_size,
     std::cout << p2_setup_board << " read in\n";
 
     //do the player boards match?
-    if (count1 == count2/10 == board_size){
+    if (count1 == count2/board_size == board_size){
         //Throw exception??
         throw ServerException("Passed!");
     }
-    if (count1/10 != count2/10 || count1/10 != board_size){
+    if (count1/board_size != count2/board_size || count1/board_size != board_size){
         //Throw another exception
         throw ServerException("Failed, board sizes not correct.");
     }
