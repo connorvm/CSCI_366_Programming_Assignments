@@ -31,7 +31,10 @@ using namespace std;
  */
 int get_file_length(ifstream *file){
 
-    cout << file << " is the input file.\n";
+//    file->seekg(0, std::ifstream::end); //0 offset, to the end of the file
+//    int length = file->tellg();
+//    cout << file << " is the input file.\n";
+//    return length;
 
     /*
     std::ifstream f_in(*file);
@@ -48,23 +51,27 @@ void Server::initialize(unsigned int board_size,
      * board_size parameter.
      */
 
-    //int board1 = get_file_length(p1_setup_board;
-
     //open setup_boards
-    std::ifstream p1_in("player_1.setup_board.txt");
+    cout << "-----------------\n";
+
+    ifstream p1_in(p1_setup_board);
     char character1; int count1 = 0;
     while (p1_in >> character1) ++count1;
-    std::cout << count1/board_size << " characters in Player 1 board\n";
+    cout << "count1 is " << count1 << ".\n";
+    cout << (count1/board_size) << " characters in Player 1 board\n";
+    cout << endl;
 
-    std::ifstream p2_in("player_2.setup_board.txt");
+    ifstream p2_in("player_2.setup_board.txt");
     char character2; int count2 = 0;
     while (p2_in >> character2) ++count2;
-    std::cout << count2/board_size << " characters in Player 2 board\n";
-
-    std::cout << board_size << " characters in board size\n";
-
-    std::cout << p1_setup_board << " read in\n";
-    std::cout << p2_setup_board << " read in\n";
+    cout << "count2 is " << count2 << ".\n";
+    cout << (count2/board_size) << " characters in Player 2 board\n";
+    cout << endl;
+    cout << board_size << " characters in board size\n";
+    cout << endl;
+    cout << p1_setup_board << " read in\n";
+    cout << p2_setup_board << " read in\n";
+    cout << "-----------------\n";
 
     //do the player boards match?
     if (count1 == count2/board_size == board_size){
@@ -112,6 +119,13 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
     }
 
     //Determine if shot is a miss, if so, return -1
+//    std::ofstream outfile;
+//    outfile.open ("player_1.setup_board.txt");
+//    int pos = x + y;
+//    outfile.seekp(7);
+//    cout << outfile.tellp() << " location.\n";
+    //outfile.tellp();
+
     //if ()
 
     //Determine if shot is a hit, if so, return 1
@@ -130,6 +144,37 @@ int Server::process_shot(unsigned int player) {
     * @return returns SHOT_PROCESSED, or NO_SHOT_FILE if nothing to process
     */
 
+    string fname = "array.json";
 
-   return NO_SHOT_FILE;
+    // remove any old serialization files
+    remove(fname.c_str());
+
+    // create an integer array
+    vector< int > array1(2);
+
+    // set some value and print
+    array1[1] = 1;
+    printf("array1[0] = %d, array1[1] = %d\n", array1[0], array1[1]);
+
+    // serialize the array
+    ofstream array_ofp(fname); // create an output file stream
+    cereal::JSONOutputArchive write_archive(array_ofp); // initialize an archive on the file
+    write_archive(cereal::make_nvp("array", array1)); // serialize the data giving it a name
+    write_archive.finishNode(); // wait for the writing process to finish
+    array_ofp.close(); // close the file
+
+
+    // create a two dimensional array for deserialization
+    vector< int > array2(2);
+
+    // deserialize the array
+    ifstream array_ifp(fname); // create an input file stream
+    cereal::JSONInputArchive read_archive(array_ifp); // initialize an archive on the file
+    read_archive(array2); // deserialize the array
+    array_ifp.close(); // close the file
+
+    // print the result of deserialization
+    printf("array2[0] = %d, array2[1] = %d\n", array2[0], array2[1]);
+
+    return NO_SHOT_FILE;
 }
