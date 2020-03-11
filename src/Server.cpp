@@ -74,7 +74,7 @@ void Server::initialize(unsigned int board_size,
     cout << "-----------------\n";
 
     //do the player boards match?
-    if (count1 == count2/board_size == board_size){
+    if (count1/board_size == count2/board_size == board_size){
         //Throw exception??
         throw ServerException("Passed!");
     }
@@ -100,7 +100,7 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
      * @return returns shot result as either HIT, MISS, or OUT_OF_BOUNDS
      */
 
-    //Check player number is within bounds
+    /*Check player number is within bounds*/
     if (player < 1){
         throw ServerException("Player number is low.");
     }
@@ -108,7 +108,7 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
         throw ServerException("Player number is high.");
     }
 
-    //Check that shot coordinates are within bounds, if so, return 0
+    /*Check that shot coordinates are within bounds, if so, return 0*/
     if (x > BOARD_SIZE){
         cout << "X coordinates is not within bounds" << endl;
         return 0;
@@ -118,17 +118,55 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
         return 0;
     }
 
-    //Determine if shot is a miss, if so, return -1
-//    std::ofstream outfile;
-//    outfile.open ("player_1.setup_board.txt");
-//    int pos = x + y;
-//    outfile.seekp(7);
-//    cout << outfile.tellp() << " location.\n";
-    //outfile.tellp();
+    /*Determine if shot is a miss, if so, return -1*/
+    fstream shotFile;
+    int ypos;
+    int pos;
+    char shot;
 
-    //if ()
+    if (player == 1){
+        shotFile.open("player_1.json");
+    } else if (player == 2) {
+        shotFile.open("player_2.json");
+    }
 
-    //Determine if shot is a hit, if so, return 1
+    if (y > 0){
+        ypos = y * board_size;
+        pos = ypos + x;
+    } else if (y == 0){
+        pos = x;
+    }
+    shotFile.seekg(pos);
+    cout << "The value at coordinates " << x << "," << y << " is " << shotFile.get() << endl;
+    shot = shotFile.get();
+    cout << shot << endl;
+
+    //If the shot is a miss, return -1
+    if (shot != 'C' || 'B' || 'R' || 'S'|| 'D'){
+        cout << "Miss!\n";
+        return -1;
+    }
+    //If the shot is a hit, return 1
+    if (shot == 'C'){
+        cout << "Hit! You hit a Carrier.\n";
+        return 1;
+    } else if (shot == 'B'){
+        cout << "Hit! You hit a Battleship.\n";
+        return 1;
+    } else if (shot == 'R'){
+        cout << "Hit! You hit a cRuiser.\n";
+        return 1;
+    } else if (shot == 'S'){
+        cout << "Hit! You hit a Submarine.\n";
+        return 1;
+    } else if (shot == 'D'){
+        cout << "Hit! You hit a Destroyer.\n";
+        return 1;
+    }
+
+
+
+    /*Determine if shot is a hit, if so, return 1*/
 
 }
 
@@ -144,7 +182,14 @@ int Server::process_shot(unsigned int player) {
     * @return returns SHOT_PROCESSED, or NO_SHOT_FILE if nothing to process
     */
 
-    string fname = "array.json";
+    string fname;
+
+    if (player == 1){
+        fname = "player_1.json";
+    }
+    else if (player == 2){
+        fname = "player_2.json";
+    }
 
     // remove any old serialization files
     remove(fname.c_str());
