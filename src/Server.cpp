@@ -113,11 +113,14 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
     }
 
     /*Check that shot coordinates are within bounds, if so, return 0*/
-    if (x > BOARD_SIZE){
+    cout << "board_size = " << board_size << endl;
+    cout << "x = " << x << endl;
+    cout << "y = " << y << endl;
+    if (x > board_size){
         cout << "X coordinates is not within bounds" << endl;
         return 0;
     }
-    if (y > BOARD_SIZE){
+    if (y > board_size){
         cout << "Y coordinates is not within bounds" << endl;
         return 0;
     }
