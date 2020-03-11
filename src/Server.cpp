@@ -113,11 +113,11 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
     }
 
     /*Check that shot coordinates are within bounds, if so, return 0*/
-    if (x > board_size){
+    if (x > BOARD_SIZE){
         cout << "X coordinates is not within bounds" << endl;
         return 0;
     }
-    if (y > board_size){
+    if (y > BOARD_SIZE){
         cout << "Y coordinates is not within bounds" << endl;
         return 0;
     }
@@ -126,12 +126,18 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
     fstream shotFile;
     int ypos;
     int pos;
-    char shot;
+    char shotValue;
+    char value;
 
+    cout << "Player number is " << player << endl;
     if (player == 1){
         shotFile.open("player_1.json");
     } else if (player == 2) {
         shotFile.open("player_2.json");
+    }
+
+    if (shotFile.is_open()) {
+        cout << "File is open." << endl;
     }
 
     if (y > 0){
@@ -140,38 +146,36 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
     } else if (y == 0){
         pos = x;
     }
+    cout << "pos = " << pos << endl;
     shotFile.seekg(pos);
     cout << "The value at coordinates " << x << "," << y << " is " << shotFile.get() << endl;
-    shot = shotFile.get();
-    cout << shot << endl;
+    shotValue = shotFile.get();
+    //shotFile.get(shotValue);
+    cout << "shotValue = " << shotValue << endl;
 
     //If the shot is a miss, return -1
-    if (shot != 'C' || 'B' || 'R' || 'S'|| 'D'){
+    if (shotValue != 'C' || 'B' || 'R' || 'S'|| 'D'){
         cout << "Miss!\n";
         return -1;
     }
-    //If the shot is a hit, return 1
-    if (shot == 'C'){
+
+    /*Determine if shot is a hit, if so, return 1*/
+    if (shotValue == 'C'){
         cout << "Hit! You hit a Carrier.\n";
         return 1;
-    } else if (shot == 'B'){
+    } else if (shotValue == 'B'){
         cout << "Hit! You hit a Battleship.\n";
         return 1;
-    } else if (shot == 'R'){
+    } else if (shotValue == 'R'){
         cout << "Hit! You hit a cRuiser.\n";
         return 1;
-    } else if (shot == 'S'){
+    } else if (shotValue == 'S'){
         cout << "Hit! You hit a Submarine.\n";
         return 1;
-    } else if (shot == 'D'){
+    } else if (shotValue == 'D'){
         cout << "Hit! You hit a Destroyer.\n";
         return 1;
     }
-
-
-
-    /*Determine if shot is a hit, if so, return 1*/
-
 }
 
 
