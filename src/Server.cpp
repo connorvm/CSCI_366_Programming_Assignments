@@ -41,6 +41,7 @@ int get_file_length(ifstream *file){
     char character; int count = 0;
     while (fin >> character) ++count;
     std::cout << count << " characters in Player 1 board\n";*/
+    return 0;
 }
 
 
@@ -57,14 +58,17 @@ void Server::initialize(unsigned int board_size,
     ifstream p1_in(p1_setup_board);
     char character1; int count1 = 0;
     while (p1_in >> character1) ++count1;
-    cout << "count1 is " << count1 << ".\n";
+    cout << "count1 is " << count1 << endl;
     cout << (count1/board_size) << " characters in Player 1 board\n";
     cout << endl;
 
-    ifstream p2_in("player_2.setup_board.txt");
+    cout << board_size << " characters in board size\n";
+    cout << endl;
+
+    ifstream p2_in(p2_setup_board);
     char character2; int count2 = 0;
     while (p2_in >> character2) ++count2;
-    cout << "count2 is " << count2 << ".\n";
+    cout << "count2 is " << count2 << endl;
     cout << (count2/board_size) << " characters in Player 2 board\n";
     cout << endl;
     cout << board_size << " characters in board size\n";
@@ -109,11 +113,11 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
     }
 
     /*Check that shot coordinates are within bounds, if so, return 0*/
-    if (x > BOARD_SIZE){
+    if (x > board_size){
         cout << "X coordinates is not within bounds" << endl;
         return 0;
     }
-    if (y > BOARD_SIZE){
+    if (y > board_size){
         cout << "Y coordinates is not within bounds" << endl;
         return 0;
     }
@@ -182,6 +186,7 @@ int Server::process_shot(unsigned int player) {
     * @return returns SHOT_PROCESSED, or NO_SHOT_FILE if nothing to process
     */
 
+    /*
     string fname;
 
     if (player == 1){
@@ -220,6 +225,6 @@ int Server::process_shot(unsigned int player) {
 
     // print the result of deserialization
     printf("array2[0] = %d, array2[1] = %d\n", array2[0], array2[1]);
-
+    */
     return NO_SHOT_FILE;
 }
