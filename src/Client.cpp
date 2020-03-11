@@ -35,21 +35,45 @@ void Client::initialize(unsigned int player, unsigned int board_size){
 
 
 void Client::fire(unsigned int x, unsigned int y) {
+    /**
+     * Fires a shot on the coordinate target and creates a player_#.shot.json file
+     * @param x - coordinate
+     * @param y - coordinate
+     */
 }
 
 
 bool Client::result_available() {
+    /**
+    * Checks if a result file is available for
+    * @return true if result is available, false otherwise
+    */
+    return false;
 }
 
 
 int Client::get_result() {
+    /**
+     * Gets the result from the player_#.result.json
+     * @return the result as either HIT, MISS, or OUT_OF_BOUNDS
+     */
 }
 
 
 
 void Client::update_action_board(int result, unsigned int x, unsigned int y) {
+    /**
+     * Updates the internal representation of player_#.action_board.json on the result of a shot.
+     * @param result - the result returned from the server
+     * @param x - coordinate
+     * @param y - coordinate
+     */
 }
 
 
 string Client::render_action_board(){
+    /**
+    * Formats a string representing player_#.action_board.json as ASCII
+    * @return ASCII representation of the action board
+    */
 }
