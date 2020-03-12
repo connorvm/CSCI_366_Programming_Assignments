@@ -117,6 +117,7 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
     }
 
     /*Check that shot coordinates are within bounds, if so, return 0*/
+    cout << "BOARD_SIZE = " << BOARD_SIZE << endl;
     cout << "board_size = " << board_size << endl;
     cout << "x = " << x << endl;
     cout << "y = " << y << endl;
@@ -124,7 +125,7 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
         cout << "X coordinates is not within bounds" << endl;
         return 0;
     }
-    if (y > board_size){
+    if (y > BOARD_SIZE){
         cout << "Y coordinates is not within bounds" << endl;
         return 0;
     }
@@ -163,13 +164,13 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
     //If the shot is a miss, return -1
     if (shotValue != 'C' || 'B' || 'R' || 'S'|| 'D'){
         cout << "Miss!\n";
-        return -1;
+        return MISS;
     }
 
     /*Determine if shot is a hit, if so, return 1*/
     if (shotValue == 'C'){
         cout << "Hit! You hit a Carrier.\n";
-        return 1;
+        return HIT;
     } else if (shotValue == 'B'){
         cout << "Hit! You hit a Battleship.\n";
         return 1;
@@ -197,44 +198,59 @@ int Server::process_shot(unsigned int player) {
     * @return returns SHOT_PROCESSED, or NO_SHOT_FILE if nothing to process
     */
 
-    string fname;
+    /*Check player number is within bounds*/
+    if (player < 1){
+        throw ServerException("Player number is low.");
+    }
+    if (player > 2){
+        throw ServerException("Player number is high.");
+    }
+
+    string fname1;
+    string fname2;
     if (player == 1){
-        fname = "player_1.json";
+        fname1 = "player_1.shot.json";
+        fname2 = "player_1.result.json";
     }
     else if (player == 2){
-        fname = "player_2.json";
+        fname1 = "player_2.shot.json";
+        fname2 = "player_1.result.json";
     }
-    cout << "fname = " << fname << endl;
+    cout << "fname1 = " << fname1 << ", fname2 = " << fname2 << endl;
 
+    // create a two dimensional array for deserialization
+    vector<int > fname_d(2);
+
+    // deserialize the array
+    ifstream array_ifp(fname1); // create an input file stream
+    cereal::JSONInputArchive read_archive(array_ifp); // initialize an archive on the file
+    read_archive(fname_d); // deserialize the array
+    array_ifp.close(); // close the file
+    // print the result of deserialization
+    cout << "fname_d[0] = " << fname_d[0] << ", fname_d[1] = " << fname_d[1] << endl;
+
+    //Evaluate the shot at the coordinates from player_#.shot.json
+    int result = evaluate_shot(player, fname_d[0], fname_d[1]);
+    cout << "result = " << result << endl;
+
+    /*Write result into player_#.result.json **/
     // remove any old serialization files
-    remove(fname.c_str());
+    remove(fname2.c_str());
 
-    // create an integer array
-    vector< char > fname1[board_size][board_size];
+    // create an int array
+    vector<int > fname_s(1);
 
     // set some value and print
-    fname1[1][1] = 'C';
-    printf("fname1[0] = %d, fname1[1] = %d\n", fname1[0], fname1[1]);
+    fname_s[0] = result;
+    cout << "fname_s[0] = " << fname_s[0] << endl;
 
     // serialize the array
-    ofstream array_ofp(fname); // create an output file stream
+    ofstream array_ofp(fname2); // create an output file stream
     cereal::JSONOutputArchive write_archive(array_ofp); // initialize an archive on the file
-    write_archive(cereal::make_nvp("fname", fname1)); // serialize the data giving it a name
+    write_archive(cereal::make_nvp("fname2", fname2)); // serialize the data giving it a name
     write_archive.finishNode(); // wait for the writing process to finish
     array_ofp.close(); // close the file
 
-
-    // create a two dimensional array for deserialization
-    vector< int > fname2(2);
-
-    // deserialize the array
-    ifstream array_ifp(fname); // create an input file stream
-    cereal::JSONInputArchive read_archive(array_ifp); // initialize an archive on the file
-    read_archive(fname2); // deserialize the array
-    array_ifp.close(); // close the file
-
-    // print the result of deserialization
-    printf("fname2[0] = %d, fname2[1] = %d\n", fname2[0], fname2[1]);
-
+//    return SHOT_FILE_PROCESSED;
     return NO_SHOT_FILE;
 }
