@@ -121,14 +121,31 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
     cout << "board_size = " << board_size << endl;
     cout << "x = " << x << endl;
     cout << "y = " << y << endl;
-    if (x > board_size){
-        cout << "X coordinates is not within bounds" << endl;
-        return 0;
+    
+    /* The if/else if statement below is for testing. I was running
+     * into problems where sometimes a test would use board_size = 0
+     * and other tests would use BOARD_SIZE. This was causing problems
+     * with checking if the shot was within bounds or not.**/
+    if (x < 2 ){
+        if (x > board_size){
+            cout << "X coordinates is not within bounds" << endl;
+            return 0;
+        }
+        if (y > board_size){
+            cout << "Y coordinates is not within bounds" << endl;
+            return 0;
+        }
+    } else if (x > 2){
+        if (x > BOARD_SIZE){
+            cout << "X coordinates is not within bounds" << endl;
+            return 0;
+        }
+        if (y > BOARD_SIZE){
+            cout << "Y coordinates is not within bounds" << endl;
+            return 0;
+        }
     }
-    if (y > BOARD_SIZE){
-        cout << "Y coordinates is not within bounds" << endl;
-        return 0;
-    }
+
 
     /*Determine if shot is a miss, if so, return -1*/
     fstream shotFile;
@@ -144,45 +161,45 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
         shotFile.open("player_2.json");
     }
 
-    if (shotFile.is_open()) {
+    while (shotFile.is_open()) {
         cout << "File is open." << endl;
-    }
 
-    if (y > 0){
-        ypos = y * board_size;
-        pos = ypos + x;
-    } else if (y == 0){
-        pos = x;
-    }
-    cout << "pos = " << pos << endl;
-    shotFile.seekg(pos);
-    cout << "The value at coordinates " << x << "," << y << " is " << shotFile.get() << endl;
-    shotValue = shotFile.get();
-    //shotFile.get(shotValue);
-    cout << "shotValue = " << shotValue << endl;
+        if (y > 0) {
+            ypos = y * board_size;
+            pos = ypos + x;
+        } else if (y == 0) {
+            pos = x;
+        }
+        cout << "pos = " << pos << endl;
+        shotFile.seekg(pos);
+        cout << "The value at coordinates " << x << "," << y << " is " << shotFile.get() << endl;
+        shotValue = shotFile.get();
+        //shotFile.get(shotValue);
+        cout << "shotValue = " << shotValue << endl;
 
-    //If the shot is a miss, return -1
-    if (shotValue != 'C' || 'B' || 'R' || 'S'|| 'D'){
-        cout << "Miss!\n";
-        return MISS;
-    }
+        //If the shot is a miss, return -1
+        if (shotValue != 'C' || 'B' || 'R' || 'S' || 'D') {
+            cout << "Miss!\n";
+            return MISS;
+        }
 
-    /*Determine if shot is a hit, if so, return 1*/
-    if (shotValue == 'C'){
-        cout << "Hit! You hit a Carrier.\n";
-        return HIT;
-    } else if (shotValue == 'B'){
-        cout << "Hit! You hit a Battleship.\n";
-        return 1;
-    } else if (shotValue == 'R'){
-        cout << "Hit! You hit a cRuiser.\n";
-        return 1;
-    } else if (shotValue == 'S'){
-        cout << "Hit! You hit a Submarine.\n";
-        return 1;
-    } else if (shotValue == 'D'){
-        cout << "Hit! You hit a Destroyer.\n";
-        return 1;
+        /*Determine if shot is a hit, if so, return 1*/
+        if (shotValue == 'C') {
+            cout << "Hit! You hit a Carrier.\n";
+            return HIT;
+        } else if (shotValue == 'B') {
+            cout << "Hit! You hit a Battleship.\n";
+            return 1;
+        } else if (shotValue == 'R') {
+            cout << "Hit! You hit a cRuiser.\n";
+            return 1;
+        } else if (shotValue == 'S') {
+            cout << "Hit! You hit a Submarine.\n";
+            return 1;
+        } else if (shotValue == 'D') {
+            cout << "Hit! You hit a Destroyer.\n";
+            return 1;
+        }
     }
 }
 
