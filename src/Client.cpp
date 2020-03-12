@@ -30,7 +30,8 @@ void Client::initialize(unsigned int player, unsigned int board_size){
      * @param board_size - the square size of the action board
      */
 
-    
+
+
 }
 
 

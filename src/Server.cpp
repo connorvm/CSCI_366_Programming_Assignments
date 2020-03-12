@@ -20,6 +20,10 @@
 
 #include "fstream"
 #include "iostream"
+
+#include <cereal/archives/json.hpp>
+#include <cereal/types/vector.hpp>
+
 using namespace std;
 
 
@@ -193,45 +197,44 @@ int Server::process_shot(unsigned int player) {
     * @return returns SHOT_PROCESSED, or NO_SHOT_FILE if nothing to process
     */
 
-    /*
     string fname;
-
     if (player == 1){
         fname = "player_1.json";
     }
     else if (player == 2){
         fname = "player_2.json";
     }
+    cout << "fname = " << fname << endl;
 
     // remove any old serialization files
     remove(fname.c_str());
 
     // create an integer array
-    vector< int > array1(2);
+    vector< char > fname1[board_size][board_size];
 
     // set some value and print
-    array1[1] = 1;
-    printf("array1[0] = %d, array1[1] = %d\n", array1[0], array1[1]);
+    fname1[1][1] = 'C';
+    printf("fname1[0] = %d, fname1[1] = %d\n", fname1[0], fname1[1]);
 
     // serialize the array
     ofstream array_ofp(fname); // create an output file stream
     cereal::JSONOutputArchive write_archive(array_ofp); // initialize an archive on the file
-    write_archive(cereal::make_nvp("array", array1)); // serialize the data giving it a name
+    write_archive(cereal::make_nvp("fname", fname1)); // serialize the data giving it a name
     write_archive.finishNode(); // wait for the writing process to finish
     array_ofp.close(); // close the file
 
 
     // create a two dimensional array for deserialization
-    vector< int > array2(2);
+    vector< int > fname2(2);
 
     // deserialize the array
     ifstream array_ifp(fname); // create an input file stream
     cereal::JSONInputArchive read_archive(array_ifp); // initialize an archive on the file
-    read_archive(array2); // deserialize the array
+    read_archive(fname2); // deserialize the array
     array_ifp.close(); // close the file
 
     // print the result of deserialization
-    printf("array2[0] = %d, array2[1] = %d\n", array2[0], array2[1]);
-    */
+    printf("fname2[0] = %d, fname2[1] = %d\n", fname2[0], fname2[1]);
+
     return NO_SHOT_FILE;
 }
