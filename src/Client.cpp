@@ -30,7 +30,27 @@ void Client::initialize(unsigned int player, unsigned int board_size){
      * @param board_size - the square size of the action board
      */
 
+    string fname;
+    if (player == 1){
+        fname = "player_1.action_board.json";
+    }
+    else if (player == 2){
+        fname = "player_2.action_board.json";
+    }
+    cout << "fname = " << fname << endl;
 
+    // create an char array
+    vector<char > board(board_size);
+    for (int i = 0; i < board_size; ++i) {
+        board[i] = 0;
+    }
+
+    // serialize the array
+    ofstream array_ofp(fname); // create an output file stream
+    cereal::JSONOutputArchive write_archive(array_ofp); // initialize an archive on the file
+    write_archive(cereal::make_nvp("board", board)); // serialize the data giving it a name
+    write_archive.finishNode(); // wait for the writing process to finish
+    array_ofp.close(); // close the file
 
 }
 
@@ -41,6 +61,35 @@ void Client::fire(unsigned int x, unsigned int y) {
      * @param x - coordinate
      * @param y - coordinate
      */
+
+//    string fname1;
+//    string fname2;
+//    if (player == 1){
+//        fname1 = "player_1.shot.json";
+//        fname2 = "player_1.result.json";
+//    }
+//    else if (player == 2){
+//        fname1 = "player_2.shot.json";
+//        fname2 = "player_1.result.json";
+//    }
+//    cout << "fname1 = " << fname1 << ", fname2 = " << fname2 << endl;
+//    /*Write a shot into player_#.shot.json **/
+//    // remove any old serialization files
+//    remove(fname2.c_str());
+//
+//    // create an char array
+//    vector<int > fname_s(1);
+//
+//    // set some value and print
+//    fname_s[0] = result;
+//    cout << "fname_s[0] = " << fname_s[0] << endl;
+//
+//    // serialize the array
+//    ofstream array_ofp(fname2); // create an output file stream
+//    cereal::JSONOutputArchive write_archive(array_ofp); // initialize an archive on the file
+//    write_archive(cereal::make_nvp("fname2", fname2)); // serialize the data giving it a name
+//    write_archive.finishNode(); // wait for the writing process to finish
+//    array_ofp.close(); // close the file
 }
 
 
