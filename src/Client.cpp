@@ -16,6 +16,7 @@
 
 #include "common.hpp"
 #include "Client.hpp"
+#include "Server.hpp"
 
 Client::~Client() {
 }
@@ -100,7 +101,12 @@ bool Client::result_available() {
     * Checks if a result file is available for
     * @return true if result is available, false otherwise
     */
-    return false;
+    Server srv;
+
+    if (srv.process_shot(player) == SHOT_FILE_PROCESSED) {
+        return true;
+    } else if (srv.process_shot(player) == NO_SHOT_FILE)
+        return false;
 }
 
 
