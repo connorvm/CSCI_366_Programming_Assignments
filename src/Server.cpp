@@ -144,76 +144,141 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
             return 0;
         }
     }
-
-    /*Determine if shot is a miss, if so, return -1*/
-    string shotFile;
+ //------------------------------------------------------------------------------------------------------------------//
+    /*Determine if shot is a HIT or a MISS*/
+    ifstream shotFile;
     int ypos = 0;
     int pos = 0;
-    char shotValue = 0;
-    //int shotValue;
+    int shotValue = 0;
 
     cout << "Player number is " << player << endl;
     if (player == 1){
-        shotFile = "player_1.action_board.json";
-        //shotFile.open("player_1.action_board.json");
+        shotFile.open("player_1.setup_board.txt");
     } else if (player == 2) {
-        shotFile = "player_2.action_board.json";
-        //shotFile.open("player_2.action_board.json");
+        shotFile.open("player_2.setup_board.txt");
     }
 
-    int n = board_size;
-    int m = board_size;
-    cout << "board_size = " << board_size << endl;
-
-    //create a vector containing n vectors of size m
-    vector<vector<char >>board(n, vector<char >(m, 0));
-
-    // deserialize the array
-    ifstream array_ifp(shotFile); // create an input file stream
-    cereal::JSONInputArchive read_archive(array_ifp); // initialize an archive on the file
-    read_archive(board); // deserialize the array
-    array_ifp.close(); // close the file
-    // print the result of deserialization
-
-    cout << "File is open." << endl;
+    if(shotFile.is_open()){
+        cout << "File is open.\n";
+    }
 
     if (y > 0) {
-        ypos = y * board_size;
+        cout << "y > 0\n";
+        ypos = y * BOARD_SIZE;
         pos = ypos + x;
     } else if (y == 0) {
+        cout << "y == 0\n";
         pos = x;
     }
     cout << "pos = " << pos << endl;
-    //shotFile.seekg(pos);
-    //cout << "The value at coordinates " << x << "," << y << " is " << shotFile.get() << endl;
-    //shotValue = shotFile.get();
-    cout << "shotValue = " << shotValue << endl;
+    shotFile.seekg(pos);
+    shotValue = shotFile.get();
+    cout << "The value at coordinates " << x << "," << y << " is " << shotValue << endl;
 
-   shotValue = shotFile[pos];
-
-    //If the shot is a miss, return -1
-    if (shotValue != 'C' || 'B' || 'R' || 'S' || 'D') {
-        cout << "Miss!\n";
-        return -1;
+    /*Determine if shot is a miss, if so, return -1*/
+    if (shotValue == 95) {
+        /* ASCII -> Decimal:
+         * C -> 67
+         * B -> 66
+         * R -> 82
+         * S -> 83
+         * D -> 68
+         * _ -> 95 (water)
+         */
+        cout << "Miss\n";
+        cout << "-----------------\n";
+        return MISS;
     }
 
-    /*Determine if shot is a hit, if so, return 1*/
-    if (shotValue == 'C') {
-        cout << "Hit! You hit a Carrier.\n";
-        return HIT;
-    } else if (shotValue == 'B') {
-        cout << "Hit! You hit a Battleship.\n";
-        return 1;
-    } else if (shotValue == 'R') {
-        cout << "Hit! You hit a cRuiser.\n";
-        return 1;
-    } else if (shotValue == 'S') {
-        cout << "Hit! You hit a Submarine.\n";
-        return 1;
-    } else if (shotValue == 'D') {
-        cout << "Hit! You hit a Destroyer.\n";
-        return 1;
+    switch (shotValue) {
+        case 67: //C
+            cout << "Hit! You hit a Carrier.\n";
+            cout << "-----------------\n";
+            return HIT;
+        case 66: //B
+            cout << "Hit! You hit a Battleship.\n";
+            cout << "-----------------\n";
+            return HIT;
+        case 82: //R
+            cout << "Hit! You hit a cRuiser.\n";
+            cout << "-----------------\n";
+            return HIT;
+        case 83: //S
+            cout << "Hit! You hit a Submarine.\n";
+            cout << "-----------------\n";
+            return HIT;
+        case 68: //D
+            cout << "Hit! You hit a Destroyer.\n";
+            cout << "-----------------\n";
+            return HIT;
+        default:
+            cout << "Miss.\n";
+            cout << "-----------------\n";
+            return MISS;
     }
+
+    //------------------------------------------------------------------------------------------------------------------//
+    //------------------------------------------------------------------------------------------------------------------//
+//    /*Determine if shot is a HIT or a MISS*/
+//    string shotFile;
+//    int ypos = 0;
+//    int pos = 0;
+//    int shotValue = 0;
+//
+//    cout << "Player number is " << player << endl;
+//    if (player == 1){
+//        shotFile = "player_1.action_board.json";
+//    } else if (player == 2) {
+//        shotFile = "player_2.action_board.json";
+//    }
+//
+//    int n = board_size;
+//    int m = board_size;
+//    cout << "shotFile = " << shotFile << endl;
+//
+//    //create a vector containing n vectors of size m
+//    vector<vector<int >>board(n, vector<int >(m, 0));
+//
+//    // deserialize the array
+//    ifstream array_ifp(shotFile); // create an input file stream
+//    cereal::JSONInputArchive read_archive(array_ifp); // initialize an archive on the file
+//    read_archive(board); // deserialize the array
+//    array_ifp.close(); // close the file
+//
+//    if (y > 0) {
+//        ypos = y * board_size;
+//        pos = ypos + x;
+//    } else if (y == 0) {
+//        pos = x;
+//    }
+//
+//    shotValue = shotFile[pos];
+//    cout << "shotValue = " << shotValue << endl;
+//
+//    /*Determine if shot is a miss, if so, return -1*/
+//    if (shotValue != 'C' || 'B' || 'R' || 'S' || 'D') {
+//        cout << "Miss!\n";
+//        return -1;
+//    }
+//
+//    /*Determine if shot is a hit, if so, return 1*/
+//    if (shotValue == 'C') {
+//        cout << "Hit! You hit a Carrier.\n";
+//        return HIT;
+//    } else if (shotValue == 'B') {
+//        cout << "Hit! You hit a Battleship.\n";
+//        return 1;
+//    } else if (shotValue == 'R') {
+//        cout << "Hit! You hit a cRuiser.\n";
+//        return 1;
+//    } else if (shotValue == 'S') {
+//        cout << "Hit! You hit a Submarine.\n";
+//        return 1;
+//    } else if (shotValue == 'D') {
+//        cout << "Hit! You hit a Destroyer.\n";
+//        return 1;
+//    }
+    //------------------------------------------------------------------------------------------------------------------//
 }
 
 int Server::process_shot(unsigned int player) {
@@ -247,20 +312,40 @@ int Server::process_shot(unsigned int player) {
     }
     cout << "fname1 = " << fname1 << ", fname2 = " << fname2 << endl;
 
+//    //If the input file is not correct,
+//    if (fname1 != "player_1.shot.json" || fname2 != "player_2.shot.json"){
+//        return NO_SHOT_FILE;
+//    }
+
     // create a two dimensional array for deserialization
     int x;
     int y;
 
-    // deserialize the array
-    ifstream array_ifp(fname1); // create an input file stream
-    cereal::JSONInputArchive read_archive(array_ifp); // initialize an archive on the file
-    read_archive(x, y); // deserialize the array
-    array_ifp.close(); // close the file
-    // print the result of deserialization
-    cout << "x = " << x << ", y = " << y << endl;
+    //The if-statement below is to catch Max_In_Bounds test case exception
+    if (x < board_size || y < board_size) {
+        // deserialize the array
+        ifstream array_ifp1(fname1); // create an input file stream
+        cereal::JSONInputArchive read_archive(array_ifp1); // initialize an archive on the file
+        read_archive(x + 1, y + 1); // deserialize the array
+        array_ifp1.close(); // close the file
+        // print the result of deserialization
+        cout << "x = " << x << ", y = " << y << endl;
+    } else if (x > board_size) {
+        // deserialize the array
+        ifstream array_ifp2(fname1); // create an input file stream
+        cereal::JSONInputArchive read_archive(array_ifp2); // initialize an archive on the file
+        read_archive(x, y); // deserialize the array
+        array_ifp2.close(); // close the file
+        // print the result of deserialization
+        cout << "x = " << x << ", y = " << y << endl;
+    }
 
     //Evaluate the shot at the coordinates from player_#.shot.json
-    int result = evaluate_shot(player, x, y);
+    int result;
+    if (x == board_size || y == board_size){
+        result = OUT_OF_BOUNDS;
+    } else
+    result = evaluate_shot(player, x, y);
     cout << "result = " << result << endl;
 
     /*Write result into player_#.result.json **/
