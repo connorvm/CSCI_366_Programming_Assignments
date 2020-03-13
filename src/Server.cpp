@@ -236,6 +236,7 @@ int Server::process_shot(unsigned int player) {
     cout << "fname1 = " << fname1 << ", fname2 = " << fname2 << endl;
 
     // create a two dimensional array for deserialization
+    //vector<vector<int>>fname_d(2, vector<int>(2, 0));
     vector<int > fname_d(2);
 
     // deserialize the array
@@ -265,9 +266,9 @@ int Server::process_shot(unsigned int player) {
     ofstream array_ofp(fname2); // create an output file stream
     cereal::JSONOutputArchive write_archive(array_ofp); // initialize an archive on the file
     write_archive(cereal::make_nvp("fname2", fname2)); // serialize the data giving it a name
-    write_archive.finishNode(); // wait for the writing process to finish
-    array_ofp.close(); // close the file
+    //write_archive.finishNode(); // wait for the writing process to finish
+    //array_ofp.close(); // close the file
 
-//    return SHOT_FILE_PROCESSED;
+    return SHOT_FILE_PROCESSED;
     return NO_SHOT_FILE;
 }
