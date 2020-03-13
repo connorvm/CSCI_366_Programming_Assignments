@@ -39,18 +39,20 @@ void Client::initialize(unsigned int player, unsigned int board_size){
     }
     cout << "fname = " << fname << endl;
 
-    // create an char array
-    vector<char > board(board_size);
-    for (int i = 0; i < board_size; ++i) {
-        board[i] = 0;
-    }
+    //create a two dimensional vector
+    int n = board_size;
+    int m = board_size;
+    cout << "board_size = " << board_size << endl;
+
+    //create a vector containing n vectors of size m
+    vector<vector<int>>board(n, vector<int>(m, 0));
 
     // serialize the array
     ofstream array_ofp(fname); // create an output file stream
     cereal::JSONOutputArchive write_archive(array_ofp); // initialize an archive on the file
     write_archive(cereal::make_nvp("board", board)); // serialize the data giving it a name
-    write_archive.finishNode(); // wait for the writing process to finish
-    array_ofp.close(); // close the file
+    //write_archive.finishNode(); // wait for the writing process to finish
+    //array_ofp.close(); // close the file
 
 }
 
