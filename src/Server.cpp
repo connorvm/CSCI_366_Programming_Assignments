@@ -93,7 +93,6 @@ void Server::initialize(unsigned int board_size,
     if (p1_setup_board != "player_1.setup_board.txt" || p2_setup_board != "player_2.setup_board.txt"){
         throw ServerException("File names are not valid. Please try again.");
     }
-
 }
 
 
@@ -146,63 +145,76 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
         }
     }
 
-
     /*Determine if shot is a miss, if so, return -1*/
-    fstream shotFile;
-    int ypos;
-    int pos;
-    char shotValue;
-    char value;
+    string shotFile;
+    int ypos = 0;
+    int pos = 0;
+    char shotValue = 0;
+    //int shotValue;
 
     cout << "Player number is " << player << endl;
     if (player == 1){
-        shotFile.open("player_1.action_board.json");
+        shotFile = "player_1.action_board.json";
+        //shotFile.open("player_1.action_board.json");
     } else if (player == 2) {
-        shotFile.open("player_2.action_board.json");
+        shotFile = "player_2.action_board.json";
+        //shotFile.open("player_2.action_board.json");
     }
 
-    while (shotFile.is_open()) {
-        cout << "File is open." << endl;
+    int n = board_size;
+    int m = board_size;
+    cout << "board_size = " << board_size << endl;
 
-        if (y > 0) {
-            ypos = y * board_size;
-            pos = ypos + x;
-        } else if (y == 0) {
-            pos = x;
-        }
-        cout << "pos = " << pos << endl;
-        shotFile.seekg(pos);
-        cout << "The value at coordinates " << x << "," << y << " is " << shotFile.get() << endl;
-        shotValue = shotFile.get();
-        //shotFile.get(shotValue);
-        cout << "shotValue = " << shotValue << endl;
+    //create a vector containing n vectors of size m
+    vector<vector<char >>board(n, vector<char >(m, 0));
 
-        //If the shot is a miss, return -1
-        if (shotValue != 'C' || 'B' || 'R' || 'S' || 'D') {
-            cout << "Miss!\n";
-            return MISS;
-        }
+    // deserialize the array
+    ifstream array_ifp(shotFile); // create an input file stream
+    cereal::JSONInputArchive read_archive(array_ifp); // initialize an archive on the file
+    read_archive(board); // deserialize the array
+    array_ifp.close(); // close the file
+    // print the result of deserialization
 
-        /*Determine if shot is a hit, if so, return 1*/
-        if (shotValue == 'C') {
-            cout << "Hit! You hit a Carrier.\n";
-            return HIT;
-        } else if (shotValue == 'B') {
-            cout << "Hit! You hit a Battleship.\n";
-            return 1;
-        } else if (shotValue == 'R') {
-            cout << "Hit! You hit a cRuiser.\n";
-            return 1;
-        } else if (shotValue == 'S') {
-            cout << "Hit! You hit a Submarine.\n";
-            return 1;
-        } else if (shotValue == 'D') {
-            cout << "Hit! You hit a Destroyer.\n";
-            return 1;
-        }
+    cout << "File is open." << endl;
+
+    if (y > 0) {
+        ypos = y * board_size;
+        pos = ypos + x;
+    } else if (y == 0) {
+        pos = x;
+    }
+    cout << "pos = " << pos << endl;
+    //shotFile.seekg(pos);
+    //cout << "The value at coordinates " << x << "," << y << " is " << shotFile.get() << endl;
+    //shotValue = shotFile.get();
+    cout << "shotValue = " << shotValue << endl;
+
+   shotValue = shotFile[pos];
+
+    //If the shot is a miss, return -1
+    if (shotValue != 'C' || 'B' || 'R' || 'S' || 'D') {
+        cout << "Miss!\n";
+        return -1;
+    }
+
+    /*Determine if shot is a hit, if so, return 1*/
+    if (shotValue == 'C') {
+        cout << "Hit! You hit a Carrier.\n";
+        return HIT;
+    } else if (shotValue == 'B') {
+        cout << "Hit! You hit a Battleship.\n";
+        return 1;
+    } else if (shotValue == 'R') {
+        cout << "Hit! You hit a cRuiser.\n";
+        return 1;
+    } else if (shotValue == 'S') {
+        cout << "Hit! You hit a Submarine.\n";
+        return 1;
+    } else if (shotValue == 'D') {
+        cout << "Hit! You hit a Destroyer.\n";
+        return 1;
     }
 }
-
 
 int Server::process_shot(unsigned int player) {
 
@@ -236,39 +248,31 @@ int Server::process_shot(unsigned int player) {
     cout << "fname1 = " << fname1 << ", fname2 = " << fname2 << endl;
 
     // create a two dimensional array for deserialization
-    //vector<vector<int>>fname_d(2, vector<int>(2, 0));
-    vector<int > fname_d(2);
+    int x;
+    int y;
 
     // deserialize the array
     ifstream array_ifp(fname1); // create an input file stream
     cereal::JSONInputArchive read_archive(array_ifp); // initialize an archive on the file
-    read_archive(fname_d); // deserialize the array
+    read_archive(x, y); // deserialize the array
     array_ifp.close(); // close the file
     // print the result of deserialization
-    cout << "fname_d[0] = " << fname_d[0] << ", fname_d[1] = " << fname_d[1] << endl;
+    cout << "x = " << x << ", y = " << y << endl;
 
     //Evaluate the shot at the coordinates from player_#.shot.json
-    int result = evaluate_shot(player, fname_d[0], fname_d[1]);
+    int result = evaluate_shot(player, x, y);
     cout << "result = " << result << endl;
 
     /*Write result into player_#.result.json **/
     // remove any old serialization files
     remove(fname2.c_str());
 
-    // create an int array
-    vector<int > fname_s(1);
-
-    // set some value and print
-    fname_s[0] = result;
-    cout << "fname_s[0] = " << fname_s[0] << endl;
-
     // serialize the array
     ofstream array_ofp(fname2); // create an output file stream
     cereal::JSONOutputArchive write_archive(array_ofp); // initialize an archive on the file
-    write_archive(cereal::make_nvp("fname2", fname2)); // serialize the data giving it a name
-    //write_archive.finishNode(); // wait for the writing process to finish
-    //array_ofp.close(); // close the file
+    write_archive(cereal::make_nvp("result", result)); // serialize the data giving it a name
 
     return SHOT_FILE_PROCESSED;
+
     return NO_SHOT_FILE;
 }
