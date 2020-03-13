@@ -52,9 +52,6 @@ void Client::initialize(unsigned int player, unsigned int board_size){
     ofstream array_ofp(fname); // create an output file stream
     cereal::JSONOutputArchive write_archive(array_ofp); // initialize an archive on the file
     write_archive(cereal::make_nvp("board", board)); // serialize the data giving it a name
-    //write_archive.finishNode(); // wait for the writing process to finish
-    //array_ofp.close(); // close the file
-
 }
 
 
@@ -65,34 +62,24 @@ void Client::fire(unsigned int x, unsigned int y) {
      * @param y - coordinate
      */
 
-//    string fname1;
-//    string fname2;
-//    if (player == 1){
-//        fname1 = "player_1.shot.json";
-//        fname2 = "player_1.result.json";
-//    }
-//    else if (player == 2){
-//        fname1 = "player_2.shot.json";
-//        fname2 = "player_1.result.json";
-//    }
-//    cout << "fname1 = " << fname1 << ", fname2 = " << fname2 << endl;
-//    /*Write a shot into player_#.shot.json **/
-//    // remove any old serialization files
-//    remove(fname2.c_str());
-//
-//    // create an char array
-//    vector<int > fname_s(1);
-//
-//    // set some value and print
-//    fname_s[0] = result;
-//    cout << "fname_s[0] = " << fname_s[0] << endl;
-//
-//    // serialize the array
-//    ofstream array_ofp(fname2); // create an output file stream
-//    cereal::JSONOutputArchive write_archive(array_ofp); // initialize an archive on the file
-//    write_archive(cereal::make_nvp("fname2", fname2)); // serialize the data giving it a name
-//    write_archive.finishNode(); // wait for the writing process to finish
-//    array_ofp.close(); // close the file
+    string fname1;
+    if (player == 1){
+        fname1 = "player_1.shot.jason";
+    }
+    else if (player == 2){
+        fname1 = "player_2.shot.json";
+    }
+    fname1 = "player_1.shot.json";
+    cout << "fname1 = " << fname1 << endl;
+
+    /*Write a shot into player_#.shot.json **/
+    // remove any old serialization files
+    remove(fname1.c_str());
+
+    // serialize the array
+    ofstream array_ofp(fname1); // create an output file stream
+    cereal::JSONOutputArchive write_archive(array_ofp); // initialize an archive on the file
+    write_archive(cereal::make_nvp("x", x), cereal::make_nvp("y", y)); // serialize the data giving it a name
 }
 
 
@@ -115,6 +102,32 @@ int Client::get_result() {
      * Gets the result from the player_#.result.json
      * @return the result as either HIT, MISS, or OUT_OF_BOUNDS
      */
+    string fname1;
+    if (player == 1){
+        fname1 = "player_1.result.json";
+    }
+    else if (player == 2){
+        fname1 = "player_1.result.json";
+    }
+    fname1 = "player_1.result.json";
+    cout << "fname1 = " << fname1 << endl;
+
+    int result; //either HIT, MISS, or OUT_OF_BOUNDS
+
+    // deserialize the array
+    ifstream array_ifp(fname1); // create an input file stream
+    cereal::JSONInputArchive read_archive(array_ifp); // initialize an archive on the file
+    read_archive(result); // deserialize the array
+    array_ifp.close(); // close the file
+    cout << "result = " << result << endl;
+
+    if (result == HIT){
+        return HIT;
+    } else if (result == MISS){
+        return MISS;
+    } else if (result == OUT_OF_BOUNDS){
+        return OUT_OF_BOUNDS;
+    }
 }
 
 
