@@ -121,7 +121,7 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
     cout << "board_size = " << board_size << endl;
     cout << "x = " << x << endl;
     cout << "y = " << y << endl;
-    
+
     /* The if/else if statement below is for testing. I was running
      * into problems where sometimes a test would use board_size = 0
      * and other tests would use BOARD_SIZE. This was causing problems
@@ -156,9 +156,9 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
 
     cout << "Player number is " << player << endl;
     if (player == 1){
-        shotFile.open("player_1.json");
+        shotFile.open("player_1.action_board.json");
     } else if (player == 2) {
-        shotFile.open("player_2.json");
+        shotFile.open("player_2.action_board.json");
     }
 
     while (shotFile.is_open()) {
