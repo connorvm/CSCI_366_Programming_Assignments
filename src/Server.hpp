@@ -55,7 +55,15 @@ public:
 
 class Server{
 public:
-   int board_size;
+   int board_size = BOARD_SIZE;
+   /*
+    * I had to initialise board_size here. I was having some big
+    * problems with checking if x and y were in-bounds in evaluate_shot().
+    * I'm not sure if this is allowed but I could not figure
+    * out another way to solve this problem with out affecting
+    * some other test.
+    *
+    * */
 
 private:
    ifstream p1_setup_board;
