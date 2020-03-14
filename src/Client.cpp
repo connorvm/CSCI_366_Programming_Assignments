@@ -41,12 +41,7 @@ void Client::initialize(unsigned int player, unsigned int board_size){
     cout << "fname = " << fname << endl;
 
     //create a two dimensional vector
-    int n = board_size;
-    int m = board_size;
-    cout << "board_size = " << board_size << endl;
-
-    //create a vector containing n vectors of size m
-    vector<vector<int>>board(n, vector<int>(m, 0));
+    vector<vector<int>>board(board_size, vector<int>(board_size, 0));
 
     // serialize the array
     ofstream array_ofp(fname); // create an output file stream
@@ -63,8 +58,9 @@ void Client::fire(unsigned int x, unsigned int y) {
      */
 
     string fname1;
+    cout << "player = " << player << endl;
     if (player == 1){
-        fname1 = "player_1.shot.jason";
+        fname1 = "player_1.shot.json";
     }
     else if (player == 2){
         fname1 = "player_2.shot.json";
@@ -88,12 +84,11 @@ bool Client::result_available() {
     * Checks if a result file is available for
     * @return true if result is available, false otherwise
     */
-    Server srv;
 
-    if (srv.process_shot(player) == SHOT_FILE_PROCESSED) {
+    if (get_result() != HIT || MISS || OUT_OF_BOUNDS){
         return true;
-    } else if (srv.process_shot(player) == NO_SHOT_FILE)
-        return false;
+    }
+    else return false;
 }
 
 
@@ -103,13 +98,12 @@ int Client::get_result() {
      * @return the result as either HIT, MISS, or OUT_OF_BOUNDS
      */
     string fname1;
-    if (player == 1){
+    if ("player_1.result.json"){
         fname1 = "player_1.result.json";
     }
-    else if (player == 2){
-        fname1 = "player_1.result.json";
+    else if ("player_2.result.json"){
+        fname1 = "player_2.result.json";
     }
-    fname1 = "player_1.result.json";
     cout << "fname1 = " << fname1 << endl;
 
     int result; //either HIT, MISS, or OUT_OF_BOUNDS
@@ -122,12 +116,16 @@ int Client::get_result() {
     cout << "result = " << result << endl;
 
     if (result == HIT){
+        remove(fname1.c_str());
         return HIT;
     } else if (result == MISS){
+        remove(fname1.c_str());
         return MISS;
     } else if (result == OUT_OF_BOUNDS){
+        remove(fname1.c_str());
         return OUT_OF_BOUNDS;
-    }
+    } else
+        throw ServerException("Bad Result");
 }
 
 
@@ -139,6 +137,26 @@ void Client::update_action_board(int result, unsigned int x, unsigned int y) {
      * @param x - coordinate
      * @param y - coordinate
      */
+
+    string shotFile = "player_1.action_board.json";
+    string actionFile = "player_1.action_board.json";
+
+    //create a vector containing n vectors of size m
+    vector<vector<int>>board(10, vector<int>(10, 0));
+
+    // deserialize the array
+    ifstream array_ifp(shotFile); // create an input file stream
+    cereal::JSONInputArchive read_archive(array_ifp); // initialize an archive on the file
+    read_archive(board); // deserialize the array
+    array_ifp.close(); // close the file
+
+    board[x][y] = result;
+
+    // serialize the array
+    ofstream array_ofp(actionFile); // create an output file stream
+    cereal::JSONOutputArchive write_archive(array_ofp); // initialize an archive on the file
+    write_archive(cereal::make_nvp("board", board)); // serialize the data giving it a name
+
 }
 
 
