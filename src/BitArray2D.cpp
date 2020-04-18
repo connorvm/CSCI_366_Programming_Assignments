@@ -23,7 +23,8 @@ BitArray2D::BitArray2D(unsigned int rows, unsigned int columns) {
     * @param rows - number of rows
     * @param columns - number of columns
     */
-    char *array;
+    char* array;
+
     int num_bits;
     int num_chars;
     int mod_check;
@@ -42,17 +43,17 @@ BitArray2D::BitArray2D(unsigned int rows, unsigned int columns) {
         //num_chars is the number needed
         cout << "mod_check = 0\n";
         cout << "num_chars = " << num_chars << endl;
-        *array = array[num_chars];
+        //Now want to allocate enough size dynamically AND initialize with all 0's -> use calloc()
+        char* array = (char*)calloc(sizeof(char), num_chars);
         cout << "---------------------------------------\n";
     } else if (mod_check > 0){
         num_chars += 1; //need to add one more char
         cout << "mod_check > 0\n";
         cout << "num_chars = " << num_chars << endl;
-       *array = array[num_chars];
+        //Now want to allocate enough size dynamically AND initialize with all 0's -> use calloc()
+        char* array = (char*)calloc(sizeof(char), num_chars);
         cout << "---------------------------------------\n";
     }
-
-
 }
 
 
@@ -68,8 +69,16 @@ bool BitArray2D::get(unsigned int row, unsigned int column){
     * @param column
     * @return bit at row and column as bool
     */
+    char* array;
    // check array bounds
-   //int bounds = ;
+   int bounds = row * column;
+   cout << "bounds = " << bounds << endl;
+   cout << "sizeof(array) = " << sizeof(array) << endl;
+   if(bounds > sizeof(array)){
+       throw BitArray2DException("OUT OF BOUNDS - HIGH.");
+   } else if (bounds < 0){
+       throw BitArray2DException("OUT OF BOUNDS - LOW");
+   }
 
    // get the element
    return get_bit_elem(array, columns, row, column);
@@ -78,7 +87,22 @@ bool BitArray2D::get(unsigned int row, unsigned int column){
 
 
 void BitArray2D::set(unsigned int row, unsigned int column){
-   // check array bounds
+    /**
+    * Set bit to true at row and column
+    * @param row
+    * @param column
+    */
+    char* array;
+    // check array bounds
+    int bounds = row * column;
+    cout << "bounds = " << bounds << endl;
+    cout << "sizeof(array) = " << sizeof(array) << endl;
+    if(bounds > sizeof(array)){
+        throw BitArray2DException("OUT OF BOUNDS - HIGH.");
+    } else if (bounds < 0){
+        throw BitArray2DException("OUT OF BOUNDS - LOW");
+    }
+
 
    // set the element
    set_bit_elem(array, columns, row, column);
