@@ -37,13 +37,47 @@ set_bit_elem:
 
         ;mask = 1 << (8 - bit_offset - 1)
         ;create a mask by shifting a 1 into the proper position
-        add rdx, -8     ;rdx = 8 - rdx
-        sub rdx, 1      ;rdx = rdx - 1
-        imul rcx, 0     ;set rcx to zero to use as the mask
-        sal rcx, rdx    ;shift a 1 into the correct place
+        sub rdx, 8     ;rdx = rdx - 8
+        neg rdx        ;negate rdx
+        dec rdx        ;rdx = rdx - 1
+        mov rcx, 1     ;set rcx to 00000001 to use as the mask
+
+        cmp rdx, 1
+        je one
+        cmp rdx, 2
+        je two
+        cmp rdx, 3
+        je thr
+        cmp rdx, 4
+        je four
+        cmp rdx, 5
+        je five
+        cmp rdx, 6
+        je six
+        cmp rdx, 7
+        je sev
+        cmp rdx, 0
+        je zero
+      zero:
+        sal rcx, 0    ;shift a 1 into the correct place
+      one:
+        sal rcx, 1    ;shift a 1 into the correct place
+      two:
+        sal rcx, 2    ;shift a 1 into the correct place
+      thr:
+        sal rcx, 3    ;shift a 1 into the correct place
+      four:
+        sal rcx, 4    ;shift a 1 into the correct place
+      five:
+        sal rcx, 5    ;shift a 1 into the correct place
+      six:
+        sal rcx, 6    ;shift a 1 into the correct place
+      sev:
+        sal rcx, 7    ;shift a 1 into the correct place
 
         ;now we can or the byte with the mask
-        or rsi, rcx     ;byte := byte or mask -> rsi or rcx
+        or rdi, rcx     ;byte := byte or mask -> rsi or rcx
+        mov rbx, rdi
         ;mov rax, rsi
 
 
@@ -80,14 +114,52 @@ get_bit_elem:
 
         ;mask = 1 << (8 - bit_offset - 1)
         ;create a mask by shifting a 1 into the proper position
-        add rdx, -8     ;rdx = 8 - rdx
-        sub rdx, 1      ;rdx = rdx - 1
-        imul rcx, 0     ;set rcx to zero to use as the mask
-        sal rcx, rdx    ;shift a 1 into the correct place
+        sub rdx, 8     ;rdx = 8 - rdx
+        neg rdx        ;rdx = -rdx
+        dec rdx        ;rdx = rdx - 1
+        mov rcx, 1     ;set rcx to 00000001 to use as the mask
+
+        cmp rdx, 1
+        je .one
+        cmp rdx, 2
+        je .two
+        cmp rdx, 3
+        je .thr
+        cmp rdx, 4
+        je .four
+        cmp rdx, 5
+        je .five
+        cmp rdx, 6
+        je .six
+        cmp rdx, 7
+        je .sev
+        cmp rdx, 8
+        je .eight
+        cmp rdx, 0
+        je .zero
+      .zero:
+        sal rcx, 0    ;shift a 1 into the correct place
+      .one:
+        sal rcx, 1    ;shift a 1 into the correct place
+      .two:
+        sal rcx, 2    ;shift a 1 into the correct place
+      .thr:
+        sal rcx, 3    ;shift a 1 into the correct place
+      .four:
+        sal rcx, 4    ;shift a 1 into the correct place
+      .five:
+        sal rcx, 5    ;shift a 1 into the correct place
+      .six:
+        sal rcx, 6    ;shift a 1 into the correct place
+      .sev:
+        sal rcx, 7    ;shift a 1 into the correct place
+      .eight:
+        sal rcx, 8    ;shift a 1 into the correct place
 
         ;now we can or the byte with the mask
-        or rsi, rcx     ;byte := byte or mask -> rsi or rcx
-        mov rax, rsi
+        or rdi, rcx     ;byte := byte or mask -> rsi or rcx
+        mov rbx, rdi
+        mov rax, rdi
         ;mov rax, 0
 
         mov rsp, rbp        ; restore stack pointer to before we pushed parameters onto the stack
