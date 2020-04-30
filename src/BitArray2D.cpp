@@ -44,14 +44,16 @@ BitArray2D::BitArray2D(unsigned int rows, unsigned int columns) {
         cout << "mod_check = 0\n";
         cout << "num_chars = " << num_chars << endl;
         //Now want to allocate enough size dynamically AND initialize with all 0's -> use calloc()
-        char* array = (char*)calloc(sizeof(char), num_chars);
+        array = (char*)calloc(sizeof(char), num_chars);
+        cout << "sizeof(array) = " << sizeof(array) << endl;
         cout << "---------------------------------------\n";
     } else if (mod_check > 0){
         num_chars += 1; //need to add one more char
         cout << "mod_check > 0\n";
         cout << "num_chars = " << num_chars << endl;
         //Now want to allocate enough size dynamically AND initialize with all 0's -> use calloc()
-        char* array = (char*)calloc(sizeof(char), num_chars);
+        array = (char*)calloc(sizeof(char), num_chars);
+        cout << "sizeof(array) = " << sizeof(array) << endl;
         cout << "---------------------------------------\n";
     }
 }
@@ -70,13 +72,16 @@ bool BitArray2D::get(unsigned int row, unsigned int column){
     * @return bit at row and column as bool
     */
     char* array;
+
    // check array bounds
    int bounds = row * column;
-   cout << "bounds = " << bounds << endl;
    cout << "sizeof(array) = " << sizeof(array) << endl;
-   if(bounds > sizeof(array)){
+   int size = sizeof(array);
+   if(row > (size + 1)){
        throw BitArray2DException("OUT OF BOUNDS - HIGH.");
-   } else if (bounds < 0){
+   }else if (column > (size + 1)) {
+       throw BitArray2DException("OUT OF BOUNDS - HIGH.");
+   }else if (bounds < 0){
        throw BitArray2DException("OUT OF BOUNDS - LOW");
    }
 
@@ -93,11 +98,15 @@ void BitArray2D::set(unsigned int row, unsigned int column){
     * @param column
     */
     char* array;
+
     // check array bounds
     int bounds = row * column;
     cout << "bounds = " << bounds << endl;
     cout << "sizeof(array) = " << sizeof(array) << endl;
-    if(bounds > sizeof(array)){
+    int size = sizeof(array) + 1;
+    if(row > size){
+        throw BitArray2DException("OUT OF BOUNDS - HIGH.");
+    } else if (column > size){
         throw BitArray2DException("OUT OF BOUNDS - HIGH.");
     } else if (bounds < 0){
         throw BitArray2DException("OUT OF BOUNDS - LOW");

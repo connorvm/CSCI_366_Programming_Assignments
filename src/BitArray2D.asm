@@ -86,10 +86,12 @@ set_bit_elem:
 
       done:
         ;now we can or the byte with the mask
-        lea r15, [rdi+r13]  ;move to the correct element index in the array
-        or r15, rcx         ;byte := byte or mask -> rdi or rcx
-        mov rbx, r15
-        ;mov rax, rsi
+        lea r15, [rdi+rsi]  ;move to the correct element index in the array
+        mov al, [r15]
+        or al, cl         ;byte := byte or mask -> rdi or rcx
+        mov [r15], al
+        movzx rsi, al
+        ;mov rbx, rsi
 
 
         mov rsp, rbp        ; restore stack pointer to before we pushed parameters onto the stack
@@ -130,7 +132,7 @@ get_bit_elem:
         sub rdx, 8     ;rdx = 8 - rdx
         neg rdx        ;rdx = -rdx
         dec rdx        ;rdx = rdx - 1
-        mov rcx, 1     ;set rcx to 00000001 to use as the mask
+        mov cl, 1     ;set rcx to 00000001 to use as the mask
 
         cmp rdx, 1
         je .one
@@ -151,40 +153,47 @@ get_bit_elem:
         cmp rdx, 0
         je .zero
       .zero:
-        sal rcx, 0    ;shift a 1 into the correct place
+        sal cl, 0    ;shift a 1 into the correct place
         jmp .done     ;move to last bit of code
       .one:
-        sal rcx, 1    ;shift a 1 into the correct place
+        sal cl, 1    ;shift a 1 into the correct place
         jmp .done     ;move to last bit of code
       .two:
-        sal rcx, 2    ;shift a 1 into the correct place
+        sal cl, 2    ;shift a 1 into the correct place
         jmp .done     ;move to last bit of code
       .thr:
-        sal rcx, 3    ;shift a 1 into the correct place
+        sal cl, 3    ;shift a 1 into the correct place
         jmp .done     ;move to last bit of code
       .four:
-        sal rcx, 4    ;shift a 1 into the correct place
+        sal cl, 4    ;shift a 1 into the correct place
         jmp .done     ;move to last bit of code
       .five:
-        sal rcx, 5    ;shift a 1 into the correct place
+        sal cl, 5    ;shift a 1 into the correct place
         jmp .done     ;move to last bit of code
       .six:
-        sal rcx, 6    ;shift a 1 into the correct place
+        sal cl, 6    ;shift a 1 into the correct place
         jmp .done     ;move to last bit of code
       .sev:
-        sal rcx, 7    ;shift a 1 into the correct place
+        sal cl, 7    ;shift a 1 into the correct place
         jmp .done     ;move to last bit of code
       .eight:
-        sal rcx, 8    ;shift a 1 into the correct place
+        sal cl, 8    ;shift a 1 into the correct place
         jmp .done     ;move to last bit of code
 
       .done:
         ;to read data, use the and instead of or
-        lea r15, [rdi+r13]  ;move to the correct element index in the array
-        and r15, rcx     ;byte := byte or mask -> rsi or rcx
-        mov rbx, r15
-        mov rax, r15
-        ;mov rax, 0
+        lea r15, [rdi+rsi]  ;move to the correct element index in the array
+        mov al, [r15]
+        and al, cl          ;byte := byte or mask -> rsi or rcx
+        movzx rsi, al
+
+        ;for return, check if byte in al is greater than 0
+        cmp al, 0
+        jne r_one
+        mov rax, 0
+
+      r_one:
+        mov rax, 1
 
         mov rsp, rbp        ; restore stack pointer to before we pushed parameters onto the stack
         pop rbp             ; remove rbp from the stack to restore rsp to initial value

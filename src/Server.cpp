@@ -184,34 +184,34 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
          */
         cout << "Miss\n";
         cout << "-----------------\n";
-        return MISS;
+        return -MISS;
     }
 
     switch (shotValue) {
         case 67: //C
             cout << "Hit! You hit a Carrier.\n";
             cout << "-----------------\n";
-            return HIT;
+            return -HIT;
         case 66: //B
             cout << "Hit! You hit a Battleship.\n";
             cout << "-----------------\n";
-            return HIT;
+            return -HIT;
         case 82: //R
             cout << "Hit! You hit a cRuiser.\n";
             cout << "-----------------\n";
-            return HIT;
+            return -HIT;
         case 83: //S
             cout << "Hit! You hit a Submarine.\n";
             cout << "-----------------\n";
-            return HIT;
+            return -HIT;
         case 68: //D
             cout << "Hit! You hit a Destroyer.\n";
             cout << "-----------------\n";
-            return HIT;
+            return -HIT;
         default:
             cout << "Miss.\n";
             cout << "-----------------\n";
-            return MISS;
+            return -MISS;
     }
 
     //------------------------------------------------------------------------------------------------------------------//
