@@ -85,11 +85,14 @@ bool Client::result_available() {
     * Checks if a result file is available for
     * @return true if result is available, false otherwise
     */
+    ifstream file1 ("player_1.result.json");
+    ifstream file2 ("player_2.result.json");
 
-    if (get_result() != HIT || MISS || OUT_OF_BOUNDS){
+    if (file1.is_open()){
         return true;
-    }
-    else return false;
+    } else if (file2.is_open()){
+        return true;
+    } else return false;
 }
 
 
@@ -127,7 +130,6 @@ int Client::get_result() {
         return OUT_OF_BOUNDS;
     } else
         throw ClientException("Bad Result");
-
 }
 
 
