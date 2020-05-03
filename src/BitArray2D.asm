@@ -20,7 +20,7 @@ set_bit_elem:
         ; rcx contains col
 
         ; add your code here
-
+        mov rsi, 10
         ;index = row*row_width + column
         imul rdx, rsi   ;rdx = rdx * rsi -> row = row * row_width
         add rdx, rcx    ;rdx = rdx + rcx -> row = (row*row_width) + col
@@ -111,6 +111,7 @@ get_bit_elem:
         ; rcx contains col
 
         ; add your code here
+        mov rsi, 10
         ;index = row*row_width + column
         imul rdx, rsi   ;rdx = rdx * rsi -> row = row * row_width
         add rdx, rcx    ;rdx = rdx + rcx -> row = (row*row_width) + col
