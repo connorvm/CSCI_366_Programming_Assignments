@@ -20,7 +20,7 @@ set_bit_elem:
         ; rcx contains col
 
         ; add your code here
-        mov rsi, 10
+        mov rsi, 10     ;set rsi to row_width to fix segmentation fault
         ;index = row*row_width + column
         imul rdx, rsi   ;rdx = rdx * rsi -> row = row * row_width
         add rdx, rcx    ;rdx = rdx + rcx -> row = (row*row_width) + col
@@ -35,6 +35,7 @@ set_bit_elem:
         imul rbx, 8     ;rbx = rbx * 8 -> byte_offset = byte_offset*8
         sub rdx, rbx    ;rdx is still "index" :: rdx = rdx - rbx -> rdx = index - (byte_offset*8)
                         ;rdx is now "bit_offset"
+        mov r13, rdx
 
         ;mask = 1 << (8 - bit_offset - 1)
         ;create a mask by shifting a 1 into the proper position
@@ -111,7 +112,7 @@ get_bit_elem:
         ; rcx contains col
 
         ; add your code here
-        mov rsi, 10
+        mov rsi, 10     ;set rsi to row_width to fix segmentation fault
         ;index = row*row_width + column
         imul rdx, rsi   ;rdx = rdx * rsi -> row = row * row_width
         add rdx, rcx    ;rdx = rdx + rcx -> row = (row*row_width) + col
