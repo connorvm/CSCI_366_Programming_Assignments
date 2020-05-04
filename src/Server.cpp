@@ -96,80 +96,80 @@ BitArray2D *Server::scan_setup_board(string setup_board_name){
     int value = 0;
 
     if (setup_board_name == "player_1.setup_board.txt"){
-        for (int i = 0; i < board_size*board_size; ++i) {
-            p_in.seekg(i);
-            value = p_in.get();
-            if (value == 67 || 66 || 82 || 83 || 68) {
-                if (i < 10) {
-                    p1_setup_board->set(0, i);
-                }
-                else if (i >= 10 && i < 20) {
-                    p1_setup_board->set(1, i);
-                }
-                else if (i >= 20 && i < 30) {
-                    p1_setup_board->set(2, i);
-                }
-                else if (i >= 30 && i < 40) {
-                    p1_setup_board->set(3, i);
-                }
-                else if (i >= 40 && i < 50) {
-                    p1_setup_board->set(4, i);
-                }
-                else if (i >= 50 && i < 60) {
-                    p1_setup_board->set(5, i);
-                }
-                else if (i >= 60 && i < 70) {
-                    p1_setup_board->set(6, i);
-                }
-                else if (i >= 70 && i < 80) {
-                    p1_setup_board->set(7, i);
-                }
-                else if (i >= 80 && i < 90) {
-                    p1_setup_board->set(8, i);
-                }
-                else if (i >= 90 && i < 100) {
-                    p1_setup_board->set(9, i);
-                }
-            }
-        }
+//        for (int i = 0; i < board_size*board_size; ++i) {
+//            p_in.seekg(i, ios::beg);
+//            value = p_in.get();
+//            if (value == 67 || 66 || 82 || 83 || 68) {
+//                if (i < 10) {
+//                    p1_setup_board->set(0, i);
+//                }
+//                else if (i >= 10 && i < 20) {
+//                    p1_setup_board->set(1, i);
+//                }
+//                else if (i >= 20 && i < 30) {
+//                    p1_setup_board->set(2, i);
+//                }
+//                else if (i >= 30 && i < 40) {
+//                    p1_setup_board->set(3, i);
+//                }
+//                else if (i >= 40 && i < 50) {
+//                    p1_setup_board->set(4, i);
+//                }
+//                else if (i >= 50 && i < 60) {
+//                    p1_setup_board->set(5, i);
+//                }
+//                else if (i >= 60 && i < 70) {
+//                    p1_setup_board->set(6, i);
+//                }
+//                else if (i >= 70 && i < 80) {
+//                    p1_setup_board->set(7, i);
+//                }
+//                else if (i >= 80 && i < 90) {
+//                    p1_setup_board->set(8, i);
+//                }
+//                else if (i >= 90 && i < 100) {
+//                    p1_setup_board->set(9, i);
+//                }
+//            }
+//        }
         return p1_setup_board;
     } else if (setup_board_name == "player_2.setup_board.txt"){
-        for (int i = 0; i < sizeof(p2_setup_board); ++i) {
-            p_in.seekg(i);
-            value = p_in.get();
-            if (value == 67 || 66 || 82 || 83 || 68) {
-                if (i < 10) {
-                    p2_setup_board->set(0, i);
-                }
-                else if (i >= 10 && i < 20) {
-                    p2_setup_board->set(1, i);
-                }
-                else if (i >= 20 && i < 30) {
-                    p2_setup_board->set(2, i);
-                }
-                else if (i >= 30 && i < 40) {
-                    p2_setup_board->set(3, i);
-                }
-                else if (i >= 40 && i < 50) {
-                    p2_setup_board->set(4, i);
-                }
-                else if (i >= 50 && i < 60) {
-                    p2_setup_board->set(5, i);
-                }
-                else if (i >= 60 && i < 70) {
-                    p2_setup_board->set(6, i);
-                }
-                else if (i >= 70 && i < 80) {
-                    p2_setup_board->set(7, i);
-                }
-                else if (i >= 80 && i < 90) {
-                    p2_setup_board->set(8, i);
-                }
-                else if (i >= 90 && i < 100) {
-                    p2_setup_board->set(9, i);
-                }
-            }
-        }
+//        for (int i = 0; i < board_size*board_size; ++i) {
+//            p_in.seekg(i, ios::beg);
+//            value = p_in.get();
+//            if (value == 67 || 66 || 82 || 83 || 68) {
+//                if (i < 10) {
+//                    p2_setup_board->set(0, i);
+//                }
+//                else if (i >= 10 && i < 20) {
+//                    p2_setup_board->set(1, i);
+//                }
+//                else if (i >= 20 && i < 30) {
+//                    p2_setup_board->set(2, i);
+//                }
+//                else if (i >= 30 && i < 40) {
+//                    p2_setup_board->set(3, i);
+//                }
+//                else if (i >= 40 && i < 50) {
+//                    p2_setup_board->set(4, i);
+//                }
+//                else if (i >= 50 && i < 60) {
+//                    p2_setup_board->set(5, i);
+//                }
+//                else if (i >= 60 && i < 70) {
+//                    p2_setup_board->set(6, i);
+//                }
+//                else if (i >= 70 && i < 80) {
+//                    p2_setup_board->set(7, i);
+//                }
+//                else if (i >= 80 && i < 90) {
+//                    p2_setup_board->set(8, i);
+//                }
+//                else if (i >= 90 && i < 100) {
+//                    p2_setup_board->set(9, i);
+//                }
+//            }
+//        }
         return p2_setup_board;
     }
 
