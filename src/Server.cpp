@@ -73,6 +73,9 @@ void Server::initialize(unsigned int board_size,
     if (p1_setup_board != "player_1.setup_board.txt" || p2_setup_board != "player_2.setup_board.txt"){
         throw ServerException("File names are not valid. Please try again.");
     }
+
+    this->p1_setup_board = scan_setup_board(p1_setup_board);
+    this->p2_setup_board = scan_setup_board(p2_setup_board);
 }
 
 
@@ -81,6 +84,96 @@ Server::~Server() {
 
 
 BitArray2D *Server::scan_setup_board(string setup_board_name){
+    /**
+     * Sets up a BitArray2D pointer with bits filled in based on a setup_board_name
+     * @param setup_board_name - the name of the setup board file
+     * @return an internally allocated pointer to a BitArray2D object
+     */
+
+    BitArray2D *p1_setup_board = new BitArray2D(board_size, board_size);
+    BitArray2D *p2_setup_board = new BitArray2D(board_size, board_size);
+    ifstream p_in(setup_board_name);
+    int value = 0;
+
+    if (setup_board_name == "player_1.setup_board.txt"){
+        for (int i = 0; i < board_size*board_size; ++i) {
+            p_in.seekg(i);
+            value = p_in.get();
+            if (value == 67 || 66 || 82 || 83 || 68) {
+                if (i < 10) {
+                    p1_setup_board->set(0, i);
+                }
+                else if (i >= 10 && i < 20) {
+                    p1_setup_board->set(1, i);
+                }
+                else if (i >= 20 && i < 30) {
+                    p1_setup_board->set(2, i);
+                }
+                else if (i >= 30 && i < 40) {
+                    p1_setup_board->set(3, i);
+                }
+                else if (i >= 40 && i < 50) {
+                    p1_setup_board->set(4, i);
+                }
+                else if (i >= 50 && i < 60) {
+                    p1_setup_board->set(5, i);
+                }
+                else if (i >= 60 && i < 70) {
+                    p1_setup_board->set(6, i);
+                }
+                else if (i >= 70 && i < 80) {
+                    p1_setup_board->set(7, i);
+                }
+                else if (i >= 80 && i < 90) {
+                    p1_setup_board->set(8, i);
+                }
+                else if (i >= 90 && i < 100) {
+                    p1_setup_board->set(9, i);
+                }
+            }
+        }
+        return p1_setup_board;
+    } else if (setup_board_name == "player_2.setup_board.txt"){
+        for (int i = 0; i < sizeof(p2_setup_board); ++i) {
+            p_in.seekg(i);
+            value = p_in.get();
+            if (value == 67 || 66 || 82 || 83 || 68) {
+                if (i < 10) {
+                    p2_setup_board->set(0, i);
+                }
+                else if (i >= 10 && i < 20) {
+                    p2_setup_board->set(1, i);
+                }
+                else if (i >= 20 && i < 30) {
+                    p2_setup_board->set(2, i);
+                }
+                else if (i >= 30 && i < 40) {
+                    p2_setup_board->set(3, i);
+                }
+                else if (i >= 40 && i < 50) {
+                    p2_setup_board->set(4, i);
+                }
+                else if (i >= 50 && i < 60) {
+                    p2_setup_board->set(5, i);
+                }
+                else if (i >= 60 && i < 70) {
+                    p2_setup_board->set(6, i);
+                }
+                else if (i >= 70 && i < 80) {
+                    p2_setup_board->set(7, i);
+                }
+                else if (i >= 80 && i < 90) {
+                    p2_setup_board->set(8, i);
+                }
+                else if (i >= 90 && i < 100) {
+                    p2_setup_board->set(9, i);
+                }
+            }
+        }
+        return p2_setup_board;
+    }
+
+
 }
 
 int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
@@ -107,22 +200,6 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
     //cout << "board_size = " << board_size << endl;
     cout << "x = " << x << endl;
     cout << "y = " << y << endl;
-
-    /* The if/else if statement below is for testing. I was running
-     * into problems where sometimes a test would use board_size = 0
-     * and other tests would use BOARD_SIZE = 10. This was causing problems
-     * with checking if the shot was within bounds or not.**/
-//    if (board_size) {
-//        if (x > board_size) {
-//            cout << "X coordinates is not within bounds" << endl;
-//            return 0;
-//        }
-//        if (y > board_size) {
-//            cout << "Y coordinates is not within bounds" << endl;
-//            return 0;
-//        }
-//    } else
-//      if (BOARD_SIZE) {
     if (x >= BOARD_SIZE) {
         cout << "X coordinates is not within bounds" << endl;
         return 0;
@@ -131,46 +208,20 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
         cout << "Y coordinates is not within bounds" << endl;
         return 0;
     }
-//      }
 
-    //------------------------------------------------------------------------------------------------------------------//
-    /*Determine if shot is a HIT or a MISS*/
-    ifstream shotFile;
-    int ypos = 0;
-    int pos = 0;
-    int shotValue = 0;
+    string board_name;
+    int shotValue;
+    ifstream p_in(board_name);
 
-    cout << "Player number is " << player << endl;
     if (player == 1){
-        shotFile.open("player_1.setup_board.txt");
+        board_name = "player_1.setup_board.txt";
     } else if (player == 2) {
-        shotFile.open("player_2.setup_board.txt");
+        board_name = "player_2.setup_board.txt";;
     }
 
-    if(shotFile.is_open()){
-        cout << "File is open.\n";
-    }
-
-    if (y > 0) {
-        cout << "y > 0\n";
-        if (x == 0 && y != 0){ // Need this in case the pos value ends up at a line feed (ASCII LF)
-            ypos = y * BOARD_SIZE - 1;
-            pos = ypos + x;
-        } else {
-            ypos = y * BOARD_SIZE;
-            pos = ypos + x;
-        }
-    } else if (y == 0) {
-        cout << "y == 0\n";
-        pos = x;
-    }
-    if (pos >= 100){
-        return OUT_OF_BOUNDS;
-    }
-    cout << "pos = " << pos << endl;
-    shotFile.seekg(pos);
-    shotValue = shotFile.get();
-    cout << "The value at coordinates " << x << "," << y << " is " << shotValue << endl;
+    int offset = x + y * (board_size + 1);
+    p_in.seekg(offset, ios::beg);
+    shotValue = p_in.get();
 
     /*Determine if shot is a miss, if so, return -1*/
     if (shotValue == 95) {
@@ -184,34 +235,34 @@ int Server::evaluate_shot(unsigned int player, unsigned int x, unsigned int y) {
          */
         cout << "Miss\n";
         cout << "-----------------\n";
-        return -MISS;
+        return MISS;
     }
 
     switch (shotValue) {
         case 67: //C
             cout << "Hit! You hit a Carrier.\n";
             cout << "-----------------\n";
-            return -HIT;
+            return HIT;
         case 66: //B
             cout << "Hit! You hit a Battleship.\n";
             cout << "-----------------\n";
-            return -HIT;
+            return HIT;
         case 82: //R
             cout << "Hit! You hit a cRuiser.\n";
             cout << "-----------------\n";
-            return -HIT;
+            return HIT;
         case 83: //S
             cout << "Hit! You hit a Submarine.\n";
             cout << "-----------------\n";
-            return -HIT;
+            return HIT;
         case 68: //D
             cout << "Hit! You hit a Destroyer.\n";
             cout << "-----------------\n";
-            return -HIT;
+            return HIT;
         default:
             cout << "Miss.\n";
             cout << "-----------------\n";
-            return -MISS;
+            return MISS;
     }
 
     //------------------------------------------------------------------------------------------------------------------//
