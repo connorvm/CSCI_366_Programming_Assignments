@@ -293,7 +293,7 @@ int Server::process_shot(unsigned int player) {
     cout << "x = " << x << ", y = " << y << endl;
 
     //Evaluate the shot at the coordinates from player_#.shot.json
-    cout << "Checking result.\n" << "x = " << x << " and y = " << y << endl;
+    cout << "Checking result. --> " << "x = " << x << " and y = " << y << endl;
     result = evaluate_shot(player, x, y);
     cout << "result = " << result << endl;
 
