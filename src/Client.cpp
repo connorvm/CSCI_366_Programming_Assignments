@@ -14,6 +14,7 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#include <sys/stat.h>
 #include "common.hpp"
 #include "Client.hpp"
 #include "Server.hpp"
@@ -85,10 +86,13 @@ bool Client::result_available() {
     * @return true if result is available, false otherwise
     */
 
-    if (get_result() != HIT || MISS || OUT_OF_BOUNDS){
-        return true;
-    }
-    else return false;
+    string p1_result = "player_1.result.json";
+    string p2_result = "player_2.result.json";
+
+    struct stat buffer;
+    return (stat (p1_result.c_str(), &buffer) == 0 ||
+            stat (p2_result.c_str(), &buffer) == 0);
+
 }
 
 
